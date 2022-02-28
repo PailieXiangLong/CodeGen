@@ -8,7 +8,7 @@
       <p><a href="https://github.com/hykes/CodeGen">GitHub</a> | <a href="https://github.com/hykes/CodeGen/issues">Issues</a> | <a href="https://plugins.jetbrains.com/plugin/9574-codegen">JetBrains</a> </p>
       <br>
       <p>This plugin helps you to generate specific template code by create table statement or database .</p>
-      <p>Support IDEA Community Edition(171+)、IDEA Ultimate Edition(171+)</p>
+      <p>Support IDEA Community Edition(213+)、IDEA Ultimate Edition(213+)</p>
       <ul>
         <li>Velocity template language</li>
         <li>IDEA database</li>
@@ -20,7 +20,7 @@
     <change-notes><![CDATA[
       <p>v1.3.1 2019-08-21</p>
       <ul>
-        <li>Support IDEA Community Edition(171+)</li>
+        <li>Support IDEA Community Edition(213+)</li>
       </ul>
       <p>v1.3.0 2019-02-26</p>
       <ul>
@@ -31,7 +31,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="171"/>
+    <idea-version since-build="231"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
