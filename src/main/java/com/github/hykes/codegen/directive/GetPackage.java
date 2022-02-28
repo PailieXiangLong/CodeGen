@@ -32,7 +32,7 @@ public class GetPackage extends Directive {
         String clazz = (String) node.jjtGetChild(0).value(context);
         if (context.containsKey(clazz)) {
             String packagePath = context.get(clazz).toString();
-            packagePath = new StringBuilder("").append(packagePath).toString();
+            packagePath = "" + packagePath;
             writer.write(packagePath);
             return true;
         }

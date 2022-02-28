@@ -5,14 +5,24 @@ import com.github.hykes.codegen.gui.cmt.MyDialogWrapper;
 import com.github.hykes.codegen.model.CodeRoot;
 import com.github.hykes.codegen.utils.GuiUtil;
 import com.github.hykes.codegen.utils.StringUtils;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.JavaDirectoryService;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiPackage;
+import com.intellij.psi.impl.file.PsiDirectoryFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -23,9 +33,10 @@ public class SelectGroupPanel {
     private JPanel rootPanel;
     private JComboBox<CodeRoot> groupComboBox;
     private JPanel groupsPanel;
-
-    private Project project;
-    private final Map<String, String> groupPathMap = new HashMap<>();
+    private JTextField outputTextField;
+    private JButton outputButton;
+    private JLabel outputLable;
+    private Map<String, String> groupPathMap = new HashMap<>();
 
     public JPanel getRootPanel() {
         return rootPanel;
@@ -38,9 +49,10 @@ public class SelectGroupPanel {
      */
     public Map<String, String> getGroupPathMap() {
         List<String> selectGroups = GuiUtil.getAllJCheckBoxValue(groupsPanel);
-        return groupPathMap.entrySet().stream()
-                .filter(kv -> selectGroups.contains(kv.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        selectGroups.forEach(s -> {
+            groupPathMap.put(s, outputTextField.getText());
+        });
+        return groupPathMap;
     }
 
     /**
@@ -52,8 +64,37 @@ public class SelectGroupPanel {
 
     public SelectGroupPanel(List<CodeRoot> roots, Project project) {
         super();
-        this.project = project;
         $$$setupUI$$$();
+
+        outputButton.addActionListener(actionEvent -> {
+            FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+            descriptor.setTitle("选择输出路径");
+            descriptor.setShowFileSystemRoots(false);
+            descriptor.setDescription("选择输出路径");
+            descriptor.setHideIgnored(true);
+            descriptor.setRoots(ProjectRootManager.getInstance(project).getContentRoots());
+            descriptor.setForcedToUseIdeaFileChooser(true);
+            VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, project.getProjectFile());
+            if (Objects.nonNull(virtualFile)) {
+                String output = virtualFile.getPath();
+                PsiDirectory psiDirectory = PsiDirectoryFactory.getInstance(project).createDirectory(virtualFile);
+                PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(psiDirectory);
+                if (psiPackage != null && psiPackage.getName() != null) {
+                    final StringBuilder path = new StringBuilder();
+                    path.append(psiPackage.getName());
+                    while (psiPackage.getParentPackage() != null && psiPackage.getParentPackage().getName() != null) {
+                        psiPackage = psiPackage.getParentPackage();
+                        if (path.length() > 0) {
+                            path.insert(0, '.');
+                        }
+                        path.insert(0, psiPackage.getName());
+                    }
+                    output = output.replace(path.toString().replace(".", "/"), "");
+                }
+                outputTextField.setText(StringUtils.applyPath(output));
+            }
+        });
+
         for (CodeRoot root : roots) {
             groupComboBox.addItem(root);
         }
@@ -73,33 +114,6 @@ public class SelectGroupPanel {
         root.getGroups().forEach(it -> {
             JCheckBox groupBox = new JCheckBox(it.getName());
             groupBox.setName(it.getId());
-            groupBox.addActionListener(box -> {
-                if (groupBox.isSelected()) {
-                    // 选择输出路径
-                    SelectPathDialog dialog = new SelectPathDialog(project);
-                    dialog.setAlwaysOnTop(true);
-                    dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    // 包装对话框
-                    MyDialogWrapper dialogWrapper = new MyDialogWrapper(project, dialog.getRootPane());
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Dimension screenSize = kit.getScreenSize();
-                    dialogWrapper.setSize(350, 160);
-                    dialogWrapper.setLocation((screenSize.width - dialog.getWidth()) / 2, (screenSize.height - dialog.getHeight()) / 2);
-                    dialogWrapper.setResizable(false);
-                    dialogWrapper.setActionOperator(dialog);
-                    // dialog.setVisible(true);
-                    dialogWrapper.show();
-                    // 获取对应的值
-                    String outputPath = dialog.getOutPutPath();
-                    String basePackage = dialog.getBasePackage();
-                    if (StringUtils.isEmpty(outputPath)) {
-                        groupBox.setSelected(false);
-                    } else {
-                        groupPathMap.put(groupBox.getName(), outputPath + basePackage.replace(".", "/"));
-                    }
-                }
-            });
             groupsPanel.add(groupBox);
         });
         groupsPanel.revalidate();

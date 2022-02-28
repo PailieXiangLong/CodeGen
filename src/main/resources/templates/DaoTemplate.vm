@@ -9,8 +9,7 @@ import java.util.List;
  * @author $!{email}
  * @date ${NOW}
  */
-@Repository
-public class ${model}Dao {
+public interface ${model}Dao {
 
     int create(${model} #LowerCase(${model}));
 
