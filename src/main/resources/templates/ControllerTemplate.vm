@@ -19,22 +19,22 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/#LowerCase(${model})")
-public class ${model}s {
+public class ${model}Controller {
 
-    @Autowired
-    private ${model}Service #LowerCase(${model})Service;
+    @Resource
+    private #Service(${model}) #ServiceImpl(${model});
 
-    @Autowired
-    private ${model}Service #LowerCase(${model})Service;
+    @Resource
+    private #Service(${model}) #ServiceImpl(${model});
 
     /**
      * 查询$!{comment}
      * @param id
      * @return
      */
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/{id}")
     public ${model} find${model}(@PathVariable Long id) {
-        return #LowerCase(${model})Service.findById(id);
+        return #ServiceImpl(${model}).findById(id);
     }
 
     /**
@@ -42,8 +42,8 @@ public class ${model}s {
      * @param #LowerCase(${model})
      * @return
      */
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public Long create${model}(@RequestBody ${model} #LowerCase(${model})) {
-        return #LowerCase(${model})Service.create(#LowerCase(${model}));
+        return #ServiceImpl(${model}).create(#LowerCase(${model}));
     }
 }

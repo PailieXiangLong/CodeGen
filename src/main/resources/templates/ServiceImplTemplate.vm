@@ -15,7 +15,7 @@ import java.util.List;
  * @date ${NOW}
  */
 @Service
-public class ${model}ServiceImpl implements ${model}Service {
+public class #ServiceImpl(${model},true) implements #Service(${model}) {
 
     @Resource
     private ${model}Dao #LowerCase(${model})Dao;

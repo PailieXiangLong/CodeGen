@@ -9,7 +9,7 @@ import java.util.List;
  * @author $!{email}
  * @date ${NOW}
  */
-public interface ${model}Service {
+public interface #Service(${model}) {
 
     /**
      * 查询$!{comment}
