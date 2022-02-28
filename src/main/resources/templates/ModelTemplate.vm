@@ -8,7 +8,6 @@ import java.util.Date;
  * $!{comment}
  * @author $!{email}
  * @date ${NOW}
- * Created by CodeGen .
  */
 @Data
 public class ${model} implements Serializable {
