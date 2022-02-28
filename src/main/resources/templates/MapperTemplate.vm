@@ -99,7 +99,7 @@
         FROM <include refid="table_name"/>
         <include refid="criteria"/>
         ORDER BY `id` DESC
-        LIMIT #{offset}, #{limit}
+        LIMIT #{startIndex}, #{pageSize}
     </select>
 
     <select id="list" parameterType="map" resultMap="${model}Map">

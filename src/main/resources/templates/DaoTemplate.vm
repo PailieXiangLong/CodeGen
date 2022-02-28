@@ -26,6 +26,7 @@ public class ${model}Dao {
 
     Long count(${model} #LowerCase(${model}));
 
-    List<${model}> paging();
+    List<${model}> paging(PageParam page, ${model} #LowerCase(${model}));
 
+    List<${model}> list(${model} #LowerCase(${model}));
 }
