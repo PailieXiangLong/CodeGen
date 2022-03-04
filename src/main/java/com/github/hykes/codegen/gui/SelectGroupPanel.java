@@ -1,7 +1,6 @@
 package com.github.hykes.codegen.gui;
 
 import com.github.hykes.codegen.constants.Defaults;
-import com.github.hykes.codegen.gui.cmt.MyDialogWrapper;
 import com.github.hykes.codegen.model.CodeRoot;
 import com.github.hykes.codegen.utils.GuiUtil;
 import com.github.hykes.codegen.utils.StringUtils;
@@ -23,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author hehaiyangwork@gmail.com
@@ -36,6 +34,7 @@ public class SelectGroupPanel {
     private JTextField outputTextField;
     private JButton outputButton;
     private JLabel outputLable;
+    private JTextField packageField;
     private Map<String, String> groupPathMap = new HashMap<>();
 
     public JPanel getRootPanel() {
@@ -90,6 +89,7 @@ public class SelectGroupPanel {
                         path.insert(0, psiPackage.getName());
                     }
                     output = output.replace(path.toString().replace(".", "/"), "");
+                    packageField.setText(path.toString());
                 }
                 outputTextField.setText(StringUtils.applyPath(output));
             }
